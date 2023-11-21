@@ -23,43 +23,29 @@ function qSimp(yi, h)
 end
 
 # Define the function you want to integrate
-f(x) = cos(x)
+f(x) = (1 - exp(-x^3)) / x^1.3
 
-# Define the limits of integration and the number of points
+# Define the limits of integration
 a = 0
-b = pi / 2
-n = 101  # Choose an odd number for Simpson's rule
+b = 1
 
-# Generate an array of x-values and compute the corresponding y-values
-x = range(a, stop=b, length=n)
-y = f.(x)
+# Define the number of points for each subdivision
+subdivisions = [10, 20, 40, 80]
 
-# Compute the step size
-h = norm(x[2:end] - x[1:end-1], Inf)
+for n in subdivisions
+    # Generate an array of x-values and compute the corresponding y-values
+    x = range(a, stop=b, length=n + 1)
+    y = f.(x)
 
-# Perform the integration using the trapezoidal rule and Simpson's rule
-T = qTrap(y, h)
-S = qSimp(y, h)
+    # Compute the step size
+    h = norm(x[2:end] - x[1:end-1], Inf)
 
-println("Trapezoidal rule result: $T")
-println("Simpson's rule result: $S")
+    # Perform the integration using the trapezoidal rule and Simpson's rule
+    T = qTrap(y, h)
+    S = qSimp(y, h)
 
-# # Generate an array of x-values using the variable step size
-# x = [0; cumsum([pi / (8 * k) for k in 1:4])]
-
-# # Ensure that the last x-value is exactly b
-# x[end] = b
-
-# # Compute the corresponding y-values
-# y = f.(x)
-
-# # Compute the step sizes
-# h = x[2:end] - x[1:end-1]
-
-# # Perform the integration using the trapezoidal rule and Simpson's rule
-# # Note: You need to modify qTrap and qSimp to accept an array of step sizes
-# T = qTrap(y, h)
-# S = qSimp(y, h)
-
-# println("Trapezoidal rule result: $T")
-# println("Simpson's rule result: $S")
+    println("Subdivision: $n")
+    println("Trapezoidal rule result: $T")
+    println("Simpson's rule result: $S")
+    println()
+end
