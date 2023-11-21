@@ -1,43 +1,82 @@
-function pivot(Binv, cB, A, b, c, entering, leaving)
-    d = Binv * A[:, entering]
-    ratio = b ./ d
-    min_ratio, min_index = findmin(ratio)
-    Binv[:, leaving] = Binv[:, leaving] / d[leaving]
-    for i in 1:length(b)
-        if i != leaving
-            Binv[:, i] = Binv[:, i] - d[i] * Binv[:, leaving]
-        end
-    end
-    cB[leaving] = c[entering]
-    return Binv, cB
-end
+using JuMP, GLPK
 
-function simplex(Binv, cB, A, b, c)
-    while true
-        reduced_cost = c' - cB' * Binv * A
-        if all(reduced_cost .>= 0)
-            return Binv * b
-        end
-        entering = findfirst(reduced_cost .< 0)
-        d = Binv * A[:, entering]
-        if all(d .<= 0)
-            error("Problem is unbounded")
-        end
-        ratio = b ./ d
-        min_ratio, leaving = findmin(ratio)
-        Binv, cB = pivot(Binv, cB, A, b, c, entering, leaving)
-    end
-end
+# Define the model
+model = Model(GLPK.Optimizer)
 
-A = [1/6 1/4; 1/2 1/4; 1/3 1/2]
-b = [60; 60; 90]
-c = [3; 4]
-Binv = [1/6 0 0; 0 1/4 0; 0 0 1/2]
-Binv = [1 0 0; 0 1 0; 0 0 1]
-cB = [0; 0; 0]
+# Define the variables
+@variable(model, x[1:3] >= 0)
 
-# Solve the problem using the Simplex method
-solution = simplex(Binv, cB, A, b, c)
+# Define the constraints
+# @constraint(model, 1 / 6 * x[1] + 1 / 4 * x[2] <= 60)
+# @constraint(model, 1 / 2 * x[1] + 1 / 4 * x[2] <= 60)
+# @constraint(model, 1 / 3 * x[1] + 1 / 2 * x[2] <= 90)
+# @constraint(model, 1 * x[1] + 1 * x[2] + 1 * x[3] <= 6)
+# @constraint(model, (-1) * x[2] + 1 * x[3] >= 2)
+@constraint(model, 3 * x[1] + 1 * x[2] + 7 * x[3] <= 72)
+@constraint(model, 2 * x[1] + 1 * x[2] + 6 * x[3] <= 60)
 
-# Print the solution
-println("The optimal solution is: ", solution)
+
+# Define the objective function
+@objective(model, Max, 4 * x[1] + 1 * x[2] + 11 * x[3])
+# @objective(model, Max, 3 * x[1] + 4 * x[2])
+# @objective(model, Max, 3 * x[1] + 4 * x[2] + 2 * x[3])
+
+# Solve the problem
+optimize!(model)
+
+# Get the optimal solution
+optimal_solution = value.(x)
+
+# Get the optimal objective value
+optimal_objective_value = objective_value(model)
+
+println("Optimal solution: ", optimal_solution)
+println("Optimal objective value: ", optimal_objective_value)
+
+# function simplex(A, b, c)
+#     m, n = size(A)
+#     B = 1:m
+#     N = m+1:m+n
+#     xB = b
+#     xN = zeros(n)
+#     cB = c[B]
+#     cN = c[N]
+#     while true
+#         # Compute the simplex tableau
+#         Binv = inv(A[:, B])
+#         tableau = [Binv*A[:, N] Binv*b; cN'-cB'*Binv*A[:, N] cB'*Binv*b]
+#         println("Simplex tableau:\n", tableau)
+
+#         # Check for optimality
+#         if all(tableau[end, 1:end-1] .>= 0)
+#             return Dict(zip([B; N], vcat(xB, xN)))
+#         end
+
+#         # Choose entering variable
+#         enter = argmin(tableau[end, 1:end-1])[2]
+
+#         # Check for unboundedness
+#         if all(tableau[1:end-1, enter] .<= 0)
+#             error("Problem is unbounded")
+#         end
+
+#         # Choose leaving variable
+#         ratios = tableau[1:end-1, end] ./ tableau[1:end-1, enter]
+#         leave = argmin(ratios[ratios.>0])[1]
+
+#         # Pivot
+#         pivot!(tableau, leave, enter)
+
+#         # Update basis
+#         B[leave], N[enter] = N[enter], B[leave]
+#         xB[leave], xN[enter] = xN[enter], xB[leave]
+#         cB[leave], cN[enter] = cN[enter], cB[leave]
+#     end
+# end
+
+# function pivot!(tableau, leave, enter)
+#     tableau[leave, :] ./= tableau[leave, enter]
+#     for i in setdiff(1:size(tableau, 1), leave)
+#         tableau[i, :] -= tableau[i, enter] * tableau[leave, :]
+#     end
+# end
