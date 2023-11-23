@@ -7,13 +7,19 @@ model = Model(GLPK.Optimizer)
 @variable(model, x[1:5] >= 0)
 
 # Define the constraints
-# @constraint(model, 1 / 6 * x[1] + 1 / 4 * x[2] <= 60)
-# @constraint(model, 1 / 2 * x[1] + 1 / 4 * x[2] <= 60)
-# @constraint(model, 1 / 3 * x[1] + 1 / 2 * x[2] <= 90)
-# @constraint(model, 1 * x[1] + 1 * x[2] + 1 * x[3] <= 6)
-# @constraint(model, (-1) * x[2] + 1 * x[3] >= 2)
-# @constraint(model, 3 * x[1] + 1 * x[2] + 7 * x[3] <= 72)
-# @constraint(model, 2 * x[1] + 1 * x[2] + 6 * x[3] <= 60)
+
+# Uppgift 10
+@constraint(model, 3 * x[1] + 1 * x[2] + 7 * x[3] <= 72)
+@constraint(model, 2 * x[1] + 1 * x[2] + 6 * x[3] <= 60)
+
+# Uppgift 11
+@constraint(model, 1 / 6 * x[1] + 1 / 4 * x[2] <= 60)
+@constraint(model, 1 / 2 * x[1] + 1 / 4 * x[2] <= 60)
+@constraint(model, 1 / 3 * x[1] + 1 / 2 * x[2] <= 90)
+
+# Uppgift 12
+@constraint(model, 1 * x[1] + 1 * x[2] + 1 * x[3] <= 6)
+@constraint(model, (-1) * x[2] + 1 * x[3] >= 2)
 
 # Uppgift 13
 @constraint(model, 3 * x[1] + 1 * x[2] + 2 * x[3] + 1 * x[4] + 4 * x[5] <= 1200)
@@ -21,9 +27,15 @@ model = Model(GLPK.Optimizer)
 @constraint(model, 7 * x[1] + 2 * x[2] + 1 * x[3] + 3 * x[4] + 5 * x[5] <= 1800)
 
 # Define the objective function
-# @objective(model, Max, 4 * x[1] + 1 * x[2] + 11 * x[3])
-# @objective(model, Max, 3 * x[1] + 4 * x[2])
-# @objective(model, Max, 3 * x[1] + 4 * x[2] + 2 * x[3])
+
+# Uppgift 10
+@objective(model, Max, 4 * x[1] + 1 * x[2] + 11 * x[3])
+
+# Uppgift 11
+@objective(model, Max, 3 * x[1] + 4 * x[2])
+
+# Uppgift 12
+@objective(model, Max, 3 * x[1] + 4 * x[2] + 2 * x[3])
 
 # Uppgift 13
 @objective(model, Max, 3 * x[1] + 1 * x[2] + 2 * x[3] + 5 * x[4] + 4 * x[5])

@@ -1,4 +1,5 @@
 import numpy as np  # Example Python code:
+import math
 
 
 def qTrap(yi, h):  # Trapez rule quadrature
@@ -20,8 +21,8 @@ def qSimp(yi, h):  # Simpson 1/3 rule
 
 
 # Assume you have some y-values and a step size h
-yi = np.array([1, 2, 3, 4, 5])
-h = 0.5
+yi = np.array([math.pi / 8, math.pi / 16, math.pi / 24])
+h = 1
 
 # Compute the results
 T = qTrap(yi, h)
