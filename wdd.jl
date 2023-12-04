@@ -28,3 +28,9 @@ function wDD(x, yi, x0, qi=[], col=100)
         println()
     end
 end
+
+x = [0, 1, 2, 3]
+y = [0, 1, 8, 27]
+x0 = 5
+
+wDD(x, y, x0)
