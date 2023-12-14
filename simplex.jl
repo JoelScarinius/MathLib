@@ -4,9 +4,16 @@ using JuMP, GLPK
 model = Model(GLPK.Optimizer)
 
 # Define the variables
-@variable(model, (x[1:4] >= 0))
+@variable(model, (x[1:2] >= 0))
 
 # Define the constraints
+
+#test
+@constraints(model, begin
+    4 * x[1] + 1 * x[2] >= 1
+    2 * x[1] + 7 * x[2] >= 2
+    6 * x[1] + 3 * x[2] >= 3
+end)
 
 # Uppgift 10
 # @constraint(model, 3 * x[1] + 1 * x[2] + 7 * x[3] <= 72)
@@ -67,10 +74,10 @@ model = Model(GLPK.Optimizer)
 # @constraint(model, -1 * x[1] - 5 * x[2] + 1 * x[3] <= 17)
 # @constraint(model, 1 * x[1] - 3 * x[2] + 5 * x[3] <= -25)
 # @constraint(model, 1 * x[1] + 7 * x[2] + 1 * x[3] <= 12)
-@constraint(model, 2 * x[1] - 1 * x[2] + 3 * x[3] - 1 * x[4] <= 11)
-@constraint(model, -1 * x[1] - 5 * x[2] + 1 * x[3] - 1 * x[4] <= 17)
-@constraint(model, 1 * x[1] - 3 * x[2] + 5 * x[3] - 1 * x[4] <= -25)
-@constraint(model, 1 * x[1] + 7 * x[2] + 1 * x[3] - 1 * x[4] <= 12)
+# @constraint(model, 2 * x[1] - 1 * x[2] + 3 * x[3] - 1 * x[4] <= 11)
+# @constraint(model, -1 * x[1] - 5 * x[2] + 1 * x[3] - 1 * x[4] <= 17)
+# @constraint(model, 1 * x[1] - 3 * x[2] + 5 * x[3] - 1 * x[4] <= -25)
+# @constraint(model, 1 * x[1] + 7 * x[2] + 1 * x[3] - 1 * x[4] <= 12)
 
 # Bug report
 # @constraint(model, 2 * x[1] + 1 * x[2] >= 4)
@@ -114,7 +121,9 @@ model = Model(GLPK.Optimizer)
 # @objective(model, Min, 11 * x[1] + 17 * x[2] - 25 * x[3] + 12 * x[4])
 # Dual
 # @objective(model, Max, 45 * x[1] - 80 * x[2] + 67 * x[3])
-@objective(model, Max, 45 * x[1] - 80 * x[2] + 67 * x[3] - 67 * x[4])
+# @objective(model, Max, 45 * x[1] - 80 * x[2] + 67 * x[3] - 67 * x[4])
+
+@objective(model, Min, 1 * x[1] + 5 * x[2])
 
 # Bug report
 # @objective(model, Min, 1 * x[1] - 1 * x[2])

@@ -11,4 +11,4 @@ def neville(x, X, Y):
     return Q[n - 1][n - 1]
 
 
-print(neville(2.5, [1, 2, 3, 4], [1, 8, 27, 64]))
+print(neville(5, [0, 1, 2, 3], [0, 1, 8, 27]))
